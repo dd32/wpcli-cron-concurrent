@@ -5,8 +5,8 @@
 #   npm run env:start
 #   npm test
 #
-# Each test calls `wp-env run tests-cli wp ...` which executes WP-CLI inside
-# the wp-env tests Docker container. The wp-cli.yml mapped into that container
+# Each test calls `wp-env run cli wp ...` which executes WP-CLI inside
+# the wp-env Docker container. The wp-cli.yml mapped into that container
 # automatically loads the plugin, so no --require flag is needed.
 
 set -euo pipefail
@@ -16,14 +16,14 @@ FAIL=0
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
-WP() { npx wp-env run tests-cli wp "$@" 2>&1; }
+WP() { npx wp-env run cli wp "$@" 2>&1; }
 
 check() {
     local name="$1"
     local expected="$2"
     local actual="$3"
 
-    if echo "$actual" | grep -qF "$expected"; then
+    if echo "$actual" | grep -qF -- "$expected"; then
         echo "✓  $name"
         PASS=$(( PASS + 1 ))
     else
@@ -40,7 +40,7 @@ not_check() {
     local unexpected="$2"
     local actual="$3"
 
-    if echo "$actual" | grep -qF "$unexpected"; then
+    if echo "$actual" | grep -qF -- "$unexpected"; then
         echo "✗  $name"
         echo "   expected NOT to contain: $unexpected"
         printf '   actual output:\n'
