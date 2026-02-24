@@ -1,0 +1,4 @@
+# Auto-load the cron-concurrent plugin whenever WP-CLI runs inside
+# the wp-env Docker containers (both development and tests environments).
+require:
+    - wp-content/plugins/wpcli-cron-concurrent/cron-concurrent.php

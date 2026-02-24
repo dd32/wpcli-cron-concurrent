@@ -1,0 +1,14 @@
+{
+    "name": "wpcli-cron-concurrent",
+    "description": "Runs WordPress cron tasks concurrently via wp-cli.",
+    "private": true,
+    "scripts": {
+        "env:start": "wp-env start",
+        "env:stop": "wp-env stop",
+        "env:destroy": "wp-env destroy",
+        "test": "bash tests/run-tests.sh"
+    },
+    "devDependencies": {
+        "@wordpress/env": "^11.0.0"
+    }
+}
