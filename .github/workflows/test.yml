@@ -19,10 +19,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-          cache: 'npm'
 
       - name: Install Node.js dependencies
-        run: npm ci
+        run: npm install
 
       # Cache the wp-env working directory (~/.wp-env) so that the WordPress
       # download and database setup are reused across runs when nothing changes.
@@ -30,7 +29,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.wp-env
-          key: wp-env-${{ hashFiles('package-lock.json', '.wp-env.json') }}
+          key: wp-env-${{ hashFiles('package.json', '.wp-env.json') }}
           restore-keys: |
             wp-env-
 
