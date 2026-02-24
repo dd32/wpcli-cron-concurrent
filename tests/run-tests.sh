@@ -8,6 +8,9 @@
 # Each test calls `wp-env run cli wp ...` which executes WP-CLI inside
 # the wp-env Docker container. The wp-cli.yml mapped into that container
 # automatically loads the plugin, so no --require flag is needed.
+#
+# Tests use --filter=test_cc_ to isolate from WordPress's default recurring
+# cron events which can't be reliably cleared.
 
 set -euo pipefail
 
@@ -52,12 +55,6 @@ not_check() {
     fi
 }
 
-# ── Reset ─────────────────────────────────────────────────────────────────────
-
-# Clear the WordPress cron queue so default scheduled events (wp_version_check,
-# wp_update_plugins, etc.) don't interfere with the tests.
-WP option delete cron > /dev/null 2>&1 || true
-
 # ── Tests ─────────────────────────────────────────────────────────────────────
 
 echo ""
@@ -74,8 +71,8 @@ out=$(WP help cron-concurrent run || true)
 check "run help shows --filter option" "--filter" "$out"
 check "run help shows --concurrent option" "--concurrent" "$out"
 
-# 3. No pending tasks produces the expected message.
-out=$(WP cron-concurrent run || true)
+# 3. No pending test tasks produces the expected message.
+out=$(WP cron-concurrent run --filter=test_cc_ || true)
 check "no pending tasks message" "No pending cron tasks found." "$out"
 
 # 4. Filter with no matching hooks also produces no-tasks message.
@@ -85,11 +82,11 @@ check "filter with zero matches" "No pending cron tasks found." "$out"
 # 5. Schedule two hooks and verify both are executed.
 WP eval "wp_schedule_single_event( time() - 1, 'test_cc_hook_a' );" > /dev/null
 WP eval "wp_schedule_single_event( time() - 1, 'test_cc_hook_b' );" > /dev/null
-out=$(WP cron-concurrent run || true)
+out=$(WP cron-concurrent run --filter=test_cc_ || true)
 check "detects and runs pending tasks" "cron task(s) completed" "$out"
 
 # 6. After running, events are consumed and queue is empty again.
-out=$(WP cron-concurrent run || true)
+out=$(WP cron-concurrent run --filter=test_cc_ || true)
 check "queue empty after run" "No pending cron tasks found." "$out"
 
 # 7. --filter limits execution to matching hooks only.
@@ -101,12 +98,12 @@ check "--filter runs matching hook" "cron task(s) completed" "$out"
 remaining=$(WP cron event list --format=json || true)
 check "non-matching hook still pending after filtered run" "test_cc_other_hook" "$remaining"
 # Clean up remaining event.
-WP cron-concurrent run > /dev/null || true
+WP cron-concurrent run --filter=test_cc_ > /dev/null || true
 
 # 8. --concurrent=1 limits to a single concurrent task.
 WP eval "wp_schedule_single_event( time() - 1, 'test_cc_seq_hook_a' );" > /dev/null
 WP eval "wp_schedule_single_event( time() - 1, 'test_cc_seq_hook_b' );" > /dev/null
-out=$(WP cron-concurrent run --concurrent=1 || true)
+out=$(WP cron-concurrent run --filter=test_cc_seq_ --concurrent=1 || true)
 check "--concurrent=1 completes all tasks" "cron task(s) completed" "$out"
 
 # ── Summary ──────────────────────────────────────────────────────────────────
