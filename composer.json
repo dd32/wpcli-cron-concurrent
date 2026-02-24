@@ -4,6 +4,7 @@
     "type": "wp-cli-package",
     "keywords": ["wp-cli", "cron", "concurrent"],
     "license": "MIT",
+    "version": "1.0.1",
     "require": {
         "wp-cli/wp-cli": "^2.0"
     },

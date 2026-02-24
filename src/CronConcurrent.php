@@ -302,7 +302,8 @@ class CronConcurrent extends WP_CLI_Command {
 	 * @param bool  $running  True if the task is still running.
 	 */
 	private function print_row( array $handle, bool $running ): void {
-		$elapsed = microtime( true ) - $handle['start_time'];
+		$end     = $handle['end_time'] ?? microtime( true );
+		$elapsed = $end - $handle['start_time'];
 
 		if ( $running ) {
 			$indicator = $this->spinner( $handle['start_time'] ) . " \033[33mRunning \033[0m";
