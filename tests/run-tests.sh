@@ -52,6 +52,12 @@ not_check() {
     fi
 }
 
+# ── Reset ─────────────────────────────────────────────────────────────────────
+
+# Clear the WordPress cron queue so default scheduled events (wp_version_check,
+# wp_update_plugins, etc.) don't interfere with the tests.
+WP option delete cron > /dev/null 2>&1 || true
+
 # ── Tests ─────────────────────────────────────────────────────────────────────
 
 echo ""

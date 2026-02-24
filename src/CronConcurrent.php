@@ -305,11 +305,11 @@ class CronConcurrent extends WP_CLI_Command {
 		$elapsed = microtime( true ) - $handle['start_time'];
 
 		if ( $running ) {
-			$indicator = $this->spinner( $handle['start_time'] ) . ' \033[33mRunning \033[0m';
+			$indicator = $this->spinner( $handle['start_time'] ) . " \033[33mRunning \033[0m";
 		} elseif ( $handle['exit_code'] === 0 ) {
-			$indicator = '\033[32m✓ Done   \033[0m';
+			$indicator = "\033[32m✓ Done   \033[0m";
 		} else {
-			$indicator = '\033[31m✗ Failed \033[0m';
+			$indicator = "\033[31m✗ Failed \033[0m";
 		}
 
 		printf(
