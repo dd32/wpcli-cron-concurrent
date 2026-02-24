@@ -1,0 +1,25 @@
+{
+    "name": "dd32/wpcli-cron-concurrent",
+    "description": "Runs WordPress cron tasks concurrently via wp-cli.",
+    "type": "wp-cli-package",
+    "keywords": ["wp-cli", "cron", "concurrent"],
+    "license": "MIT",
+    "require": {
+        "wp-cli/wp-cli": "^2.0"
+    },
+    "autoload": {
+        "classmap": ["src/"],
+        "files": ["cron-concurrent.php"]
+    },
+    "extra": {
+        "commands": [
+            "cron-concurrent",
+            "cron-concurrent run"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require-dev": {
+        "wp-cli/cron-command": "^2.3"
+    }
+}
