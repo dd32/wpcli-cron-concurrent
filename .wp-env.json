@@ -1,0 +1,6 @@
+{
+    "plugins": ["."],
+    "mappings": {
+        "wp-cli.yml": "./wp-cli.yml"
+    }
+}

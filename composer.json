@@ -18,8 +18,5 @@
         ]
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "require-dev": {
-        "wp-cli/cron-command": "^2.3"
-    }
+    "prefer-stable": true
 }
