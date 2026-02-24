@@ -1,4 +1,11 @@
 <?php
+/**
+ * Plugin Name: WP-CLI Cron Concurrent
+ * Description: Runs WordPress cron tasks concurrently via wp-cli.
+ * Version: 1.0.0
+ * Author: dd32
+ * License: MIT
+ */
 
 /**
  * WP-CLI Cron Concurrent – entry point.
