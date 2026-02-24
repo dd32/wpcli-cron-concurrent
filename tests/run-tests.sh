@@ -79,10 +79,11 @@ check "no pending tasks message" "No pending cron tasks found." "$out"
 out=$(WP cron-concurrent run --filter=__nonexistent_hook_xyz__ || true)
 check "filter with zero matches" "No pending cron tasks found." "$out"
 
-# 5. Schedule two hooks and verify both are executed.
+# 5. Schedule two hooks and verify both are executed (sequential to avoid
+#    race conditions in WordPress's cron option; concurrency tested in #8).
 WP eval "wp_schedule_single_event( time() - 1, 'test_cc_hook_a' );" > /dev/null
 WP eval "wp_schedule_single_event( time() - 1, 'test_cc_hook_b' );" > /dev/null
-out=$(WP cron-concurrent run --filter=test_cc_ || true)
+out=$(WP cron-concurrent run --filter=test_cc_ --concurrent=1 || true)
 check "detects and runs pending tasks" "cron task(s) completed" "$out"
 
 # 6. After running, events are consumed and queue is empty again.
